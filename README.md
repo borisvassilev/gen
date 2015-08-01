@@ -31,6 +31,6 @@ The code in this repository might contain errors; for the full, correct code, pl
 There are solutions to some of the exercises in the book.
 These solutions will have a copyright notice:
 
-> Copyright (c) 2015 Boris Vassilev
+> Copyright 2015 Boris Vassilev
 
 and are licenced under the terms of the GPL. See COPYING.
