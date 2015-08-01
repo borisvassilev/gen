@@ -1,3 +1,4 @@
+// Copyright (c) 2014 Alexander A. Stepanov and Daniel E. Rose
 #include <iostream>
 #include <algorithm>
 #include <vector>
