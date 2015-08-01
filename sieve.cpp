@@ -2,6 +2,7 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <sstream>
 
 #define Integer typename
 #define RandomAccessIterator typename
@@ -41,11 +42,16 @@ int prime(I first, I pos) { return 2 * (pos - first) + 3; }
 
 int main(int argc, char* argv[])
 {
-    std::vector<bool> sieve(50);
-    sift(sieve.begin(), sieve.size());
-    // all primes
-    for (auto i = sieve.begin(); i != sieve.end(); ++i) {
-        if(*i) std::cout << prime(sieve.begin(), i) << std::endl;
+    if (argc < 2) return 1;
+    std::istringstream a(argv[1]);
+    int n;
+    if (a >> n && n >= 3) {
+        std::vector<bool> sieve(n);
+        sift(sieve.begin(), sieve.size());
+        // all primes
+        for (auto i = sieve.begin(); i != sieve.end(); ++i) {
+            if(*i) std::cout << prime(sieve.begin(), i) << std::endl;
+        }
     }
-    return 0;
+    else return 2;
 }
