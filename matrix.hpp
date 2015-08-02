@@ -19,6 +19,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <functional>
 #include <sstream>
 #include <iomanip>
 #include <string>
@@ -82,6 +83,52 @@ private:
         return first;
     }
 };
+
+template <typename T>
+bool str_to_val(const std::string& s, T& v)
+{
+    std::istringstream is(s);
+    if (is >> v) return true;
+    return false;
+}
+template <> bool str_to_val<std::string>(const std::string& s,
+                                         std::string& v)
+{
+    v = s;
+    return true;
+}
+
+template <typename T>
+Matrix<T> from_input(std::istream& is, const char fs, const char rs)
+{
+    std::vector<size_t> ll(0);
+    std::vector<T> vals(0);
+
+    std::string line;
+    while (std::getline(is, line, rs)) {
+        std::istringstream linestream(line);
+        std::string val_str;
+        size_t fn(0);
+        while (std::getline(linestream, val_str, fs)) {
+            T v;
+            if (str_to_val<T>(val_str, v)) {
+                vals.push_back(v);
+                ++fn;
+            }
+        }
+        ll.push_back(fn);
+    }
+
+    size_t nc = ll.front();
+    if (all_of(std::next(cbegin(ll)), cend(ll),
+               std::bind(std::equal_to<size_t>(),
+                         std::placeholders::_1,
+                         nc)))
+        return Matrix<T>(ll.size(), nc, vals);
+    else
+        return Matrix<T>(0, 0);
+}
+
 
 #define AdditiveOperation typename
 #define MultiplicativeOperation typename
