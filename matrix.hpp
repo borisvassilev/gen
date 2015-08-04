@@ -50,7 +50,6 @@ template <>
 size_t max_element_width<bool>(const Matrix<bool>& m)
 { return 1; }
 
-
 template <typename T>
 struct Matrix {
     size_t nrow;
@@ -129,46 +128,51 @@ Matrix<T> from_input(std::istream& is, const char fs, const char rs)
         return Matrix<T>(0, 0);
 }
 
-
-#define AdditiveOperation typename
-#define MultiplicativeOperation typename
-
 template <typename T,
-          AdditiveOperation AddOp,
-          MultiplicativeOperation MultOp>
-Matrix<T> multiply(Matrix<T> const& a,
-                   Matrix<T> const& b,
-                   AddOp addop,
-                   MultOp multop)
-{
-    Matrix<T> m(a.nrow, b.ncol);
+          typename AddOp = typename std::plus<T>,
+          typename MultOp = typename std::multiplies<T>>
+struct MatrixMultiplier {
+    AddOp addop;
+    MultOp multop;
+    MatrixMultiplier(AddOp ao = std::plus<T>(),
+                     MultOp mo = std::multiplies<T>()) :
+        addop(ao), multop(mo)
+    {}
 
-    for (size_t mi = 0; mi < m.size(); ++mi) {
-        size_t row = mi / m.ncol;
-        size_t bi = mi % m.ncol;
-        size_t ai_first = row * a.ncol;
-        const size_t ai_last = ai_first + a.ncol;
+    Matrix<T> operator()(const Matrix<T>& a, const Matrix<T>& b) const
+    {
+        Matrix<T> m(a.nrow, b.ncol);
 
-        m.vals[mi] = multop(a.vals[ai_first],
-                            b.vals[bi]);
-        ++ai_first;
-        bi += b.ncol;
+        for (size_t mi = 0; mi < m.size(); ++mi) {
+            size_t row = mi / m.ncol;
+            size_t bi = mi % m.ncol;
+            size_t ai_first = row * a.ncol;
+            const size_t ai_last = ai_first + a.ncol;
 
-        while (ai_first < ai_last) {
-            m.vals[mi] = addop(m.vals[mi],
-                               multop(a.vals[ai_first],
-                                      b.vals[bi]));
+            m.vals[mi] = multop(a.vals[ai_first],
+                                b.vals[bi]);
             ++ai_first;
             bi += b.ncol;
-        }
-    }
 
-    return m;
-}
+            while (ai_first < ai_last) {
+                m.vals[mi] = addop(m.vals[mi],
+                                   multop(a.vals[ai_first],
+                                          b.vals[bi]));
+                ++ai_first;
+                bi += b.ncol;
+            }
+        }
+        return m;
+    }
+};
 
 template <typename T>
-Matrix<T> multiply(Matrix<T> const& a, Matrix<T> const& b)
-{ return multiply(a, b, std::plus<T>(), std::multiplies<T>()); }
+MatrixMultiplier<T> multiplier() 
+{ return MatrixMultiplier<T>{}; }
+
+template <typename T, typename AddOp, typename MultOp>
+MatrixMultiplier<T, AddOp, MultOp> multiplier(AddOp ao, MultOp mo)
+{ return MatrixMultiplier<T, AddOp, MultOp>{ao, mo}; }
 
 
 #endif // MATRIX_HPP
