@@ -58,7 +58,8 @@ struct Matrix {
 
     Matrix(size_t r, size_t c) : nrow(r), ncol(c), vals(nrow * ncol) {}
     Matrix(size_t r, size_t c, std::vector<T> v) :
-        nrow(r), ncol(c), vals(v) {}
+        nrow(r), ncol(c), vals(v)
+    {}
 
     const size_t size() const { return vals.size(); }
 
@@ -98,7 +99,9 @@ template <> bool str_to_val<std::string>(const std::string& s,
 }
 
 template <typename T>
-Matrix<T> from_input(std::istream& is, const char fs, const char rs)
+Matrix<T> from_input(std::istream& is,
+                     const char fs = ' ',
+                     const char rs = '\n')
 {
     std::vector<size_t> ll(0);
     std::vector<T> vals(0);
@@ -122,10 +125,12 @@ Matrix<T> from_input(std::istream& is, const char fs, const char rs)
     if (all_of(std::next(cbegin(ll)), cend(ll),
                std::bind(std::equal_to<size_t>(),
                          std::placeholders::_1,
-                         nc)))
+                         nc))) {
         return Matrix<T>(ll.size(), nc, vals);
-    else
+    }
+    else {
         return Matrix<T>(0, 0);
+    }
 }
 
 template <typename T,
