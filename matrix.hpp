@@ -63,6 +63,9 @@ struct Matrix {
 
     const size_t size() const { return vals.size(); }
 
+    T operator()(const size_t r, const size_t c) const
+    { return vals[ncol*r + c]; }
+
     friend std::ostream&
     operator<< (std::ostream& os, const Matrix& m)
     {
