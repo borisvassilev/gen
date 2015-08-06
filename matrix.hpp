@@ -26,13 +26,13 @@
 
 #define ForwardIterator typename
 template <ForwardIterator I>
-size_t max_str_len(I first, I last)
+std::string::size_type max_str_len(I first, I last)
 {
-    size_t max(0);
+    std::string::size_type max(0);
     while (first < last) {
         std::ostringstream oss;
         oss << *first;
-        size_t l(oss.str().length());
+        std::string::size_type l(oss.str().length());
         if (l > max) max = l;
         ++first;
     }
