@@ -1,4 +1,4 @@
-CXXFLAGS += -std=c++14 -pedantic -Wall
+CXXFLAGS += -std=c++14 -pedantic -Wall -O2
 GMPLIB = -lgmp -lgmpxx
 
 fib : fib.cpp power.hpp
