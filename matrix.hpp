@@ -56,8 +56,10 @@ struct Matrix {
     size_t ncol;
     std::vector<T> vals;
 
-    Matrix(size_t r, size_t c) : nrow(r), ncol(c), vals(nrow * ncol) {}
-    Matrix(size_t r, size_t c, std::vector<T> v) :
+    Matrix(const size_t r, const size_t c) :
+        nrow(r), ncol(c), vals(nrow * ncol)
+    {}
+    Matrix(const size_t r, const size_t c, const std::vector<T>& v) :
         nrow(r), ncol(c), vals(v)
     {}
 
